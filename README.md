@@ -1,4 +1,4 @@
-<img width="1280" height="640" alt="git (1)" src="https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd" />
+<img width="1367" height="865" alt="Screenshot 2026-09-12 203431" src="https://github.com/user-attachments/assets/74f083a9-1682-4609-884f-2c3e0ad87619" /><img width="1280" height="640" alt="git (1)" src="https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd" />
 
 
 
@@ -109,18 +109,44 @@ For Hardware:
 [ Win32 API ]   [ Tkinter GUI Engine ]
 (Window Shake)  (Topmost Overlay HUD)
 
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
++-------------------------------------------------------------------------------+
+|                             WINDOWS OS USERLAND                               |
+|                                                                               |
+|  [ Laptop Keyboard ] ---> [ Windows Raw Input / Event Queue ]                 |
+|                                         |                                     |
+|                                  WH_KEYBOARD_LL                               |
+|                                         v                                     |
+|  +-------------------------------------------------------------------------+  |
+|  |                        pothole.py Execution Flow                        |  |
+|  |                                                                         |  |
+|  |   [ global_key_filter() ] <-----------------------+                     |  |
+|  |          |                                        |                     |  |
+|  |          |-- (Backspace Held >= 1s) --> [ _state_lock: Reset Tire ]     |  |
+|  |          |                                        |                     |  |
+|  |          |                                        v                     |  |
+|  |          |                             [ plant_new_pothole() ]          |  |
+|  |          |                                                              |  |
+|  |          |-- (Key == Pothole Key) ----> [ trigger_pothole_hit() ]       |  |
+|  |          |                                        |                     |  |
+|  |          |                      +-----------------+-----------------+   |  |
+|  |          |                      v                                   v   |  |
+|  |          |            Thread: shake_window()             Thread: chaos_burst() |  |
+|  |          |                      |                                   |   |  |
+|  |          |-- (Tire is Flat)     |                                   |   |  |
+|  |          |   Inject Garbage     v                                   v   |  |
+|  +----------|------------------ SetWindowPos() -------------- SendInput() -+  |
+|             |                   (Win32 API)                  (Junk Chars)      |
+|             v                                                                  |
+|   (Suppress or Pass Through)                                                   |
+|             v                                                                  |
+|   [ Active Foreground App ] <--------------------------------------------------+
++-------------------------------------------------------------------------------+
 
 # Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
+<img width="1395" height="242" alt="Screenshot 2026-09-12 202927" src="https://github.com/user-attachments/assets/624bfc5c-0671-475e-99e7-13e77403a23f" />
 
-![Build](Add photos of build process here)
-*Explain the build steps*
 
-![Final](Add photo of final product here)
-*Explain the final build*
+
 
 ### Project Demo
 # Video
