@@ -1,32 +1,3 @@
-"""
-Pothole Keyboard Simulator (Windows)
-=====================================
-Turns typing into a hazardous commute.
-
-One ordinary key on your keyboard is secretly declared a "pothole." Every
-single time you hit it:
-  1. Your active window is violently shaken (like hitting suspension damage)
-  2. Your cursor drops 3 lines down into your text
-  3. A burst of garbage characters gets typed at that spot
-
-From that point on, EVERY key you press produces a random garbage
-character instead of what you actually typed — the "flat tire" state —
-until you hold BACKSPACE for 1 straight second to "repair the tire."
-A loading-bar overlay tracks the hold in real time and flips to
-"TIRE REPAIRED" the moment you clear the threshold. Only once repaired
-does a brand-new pothole get planted on a different key.
-
-Requirements:
-    pip install keyboard pywin32
-
-Run:
-    python pothole_keyboard.py
-    (Run as Administrator if key hooking doesn't seem to register)
-
-Quit any time:
-    Hold BACKSPACE for 8 straight seconds (longer than a repair hold)
-"""
-
 import random
 import string
 import threading
