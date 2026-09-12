@@ -144,6 +144,7 @@ For Hardware:
 
 # Build Photos
 <img width="1395" height="242" alt="Screenshot 2026-09-12 202927" src="https://github.com/user-attachments/assets/624bfc5c-0671-475e-99e7-13e77403a23f" />
+<img width="1367" height="865" alt="Screenshot 2026-09-12 203431" src="https://github.com/user-attachments/assets/e5856576-4d5b-43f4-ac77-fb72b96caa78" />
 
 
 
