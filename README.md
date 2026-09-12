@@ -1,109 +1,64 @@
-import random
-import time
+# Pothole Keyboard Simulator
 
-def slow_print(text):
-    """Makes text appear slowly like a retro game."""
-    print(text)
-    
-    time.sleep(1)
+Turns typing into a hazardous commute. One ordinary key is secretly a
+"pothole." Hit it, and:
 
-def play_game():
-    # --- GAME SETUP (Variables) ---
-    player_hp = 100
-    player_max_hp = 100
-    potions = 3
-    
-    dragon_hp = 150
-    dragon_name = "Smaug the Terrible"
+1. Your active window violently shakes for ~5 seconds (suspension damage).
+2. Your cursor drops 3 lines down into your text.
+3. A burst of garbage characters gets typed at that spot.
+4. The pothole immediately relocates to a new random key.
+5. **Every key you press from then on types a random garbage character
+   instead of itself** — you're driving on a flat — until you hold
+   **Backspace** for a continuous **2 seconds** to "repair the tire."
 
-    print("========================================")
-    print("⚔️  WELCOME TO DRAGON SLAYER  ⚔️")
-    print("========================================")
-    slow_print(f"A wild {dragon_name} appears!")
-    slow_print("Prepare for battle...\n")
+Hold Backspace for a continuous **8 seconds** at any time to quit the
+whole script outright.
 
-    # --- THE GAME LOOP ---
-    # This runs continuously until the player or dragon dies
-    while player_hp > 0 and dragon_hp > 0:
-        
-        # 1. DISPLAY STATS
-        print(f"\n--- STATUS ---")
-        print(f"Player HP: {player_hp}/{player_max_hp} | Potions: {potions}")
-        print(f"Dragon HP: {dragon_hp}")
-        print("--------------")
+## Setup
 
-        # 2. PLAYER'S TURN (Input)
-        print("Choose your action:")
-        print("1. Sword Attack (Reliable damage)")
-        print("2. Fireball Magic (Risky: High damage or Miss)")
-        print("3. Drink Potion (Heal 30 HP)")
-        
-        choice = input("Your move (1/2/3): ")
+```
+pip install -r requirements.txt
+```
 
-        # 3. PLAYER LOGIC
-        damage_dealt = 0
-        
-        if choice == '1':
-            damage_dealt = random.randint(10, 20)
-            print(f"You slashed the dragon for {damage_dealt} damage!")
-        
-        elif choice == '2':
-            # 40% chance to miss magic
-            hit_chance = random.randint(1, 100)
-            if hit_chance > 40:
-                damage_dealt = random.randint(25, 50)
-                print(f"CRITICAL HIT! Fireball hits for {damage_dealt} damage!")
-            else:
-                print("Your fireball missed! The dragon laughs at you.")
-        
-        elif choice == '3':
-            if potions > 0:
-                heal_amount = 30
-                player_hp += heal_amount
-                # Ensure HP doesn't go above Max
-                if player_hp > player_max_hp:
-                    player_hp = player_max_hp
-                potions -= 1
-                print(f"You drank a potion. Health restored to {player_hp}.")
-            else:
-                print("You reached for a potion... but the bag is empty! Turn lost!")
-        
-        else:
-            print("You stumbled and did nothing! (Invalid Input)")
+(`keyboard` handles the global key hook, `pywin32` handles shaking the
+window via the Win32 API.)
 
-        # Apply damage to Dragon
-        dragon_hp -= damage_dealt
+## Run
 
-        # Check if Dragon is dead
-        if dragon_hp <= 0:
-            break # Exit the loop immediately
+```
+python pothole_keyboard.py
+```
 
-        # 4. ENEMY'S TURN (AI)
-        slow_print(f"\n{dragon_name} is attacking...")
-        
-        # The dragon attacks based on randomness
-        dragon_move = random.randint(1, 3)
-        dragon_damage = 0
+If key hooking doesn't seem to register (some apps run elevated), try
+running your terminal as Administrator.
 
-        if dragon_move == 1:
-            dragon_damage = random.randint(5, 15)
-            print(f"The dragon bit you! You take {dragon_damage} damage.")
-        elif dragon_move == 2:
-            dragon_damage = random.randint(10, 25)
-            print(f"Fire Breath! It burns! You take {dragon_damage} damage.")
-        else:
-            print(f"The dragon missed its attack! You got lucky.")
+## Quit
 
-        player_hp -= dragon_damage
+Hold **Backspace** for 8 continuous seconds — no separate hotkey needed,
+and it works even mid-pothole.
 
-    # --- GAME OVER SCREEN ---
-    print("\n========================================")
-    if player_hp > 0:
-        print("🏆 VICTORY! You have slain the dragon!")
-        print(f"You survived with {player_hp} HP.")
-    else:
-        print("💀 GAME OVER. The dragon eats you for dinner.")
-    print("========================================")
+## Tuning the chaos
 
-# This line actually starts the game
-play_game();
+All the knobs are at the top of `pothole_keyboard.py`:
+
+- `REPAIR_HOLD_SECONDS` — how long you must hold Backspace to fix a flat tire
+- `QUIT_HOLD_SECONDS` — how long you must hold Backspace to quit
+- `SHAKE_DURATION` / `SHAKE_AMPLITUDE` — how violent and how long the window shake is
+- `GARBAGE_MIN_LEN` / `GARBAGE_MAX_LEN` — length of the initial garbage text burst
+- `CANDIDATE_KEYS` — which keys are eligible to become potholes (defaults to
+  a–z and space; deliberately excludes Backspace and modifier keys so
+  you're never fully locked out)
+
+## Notes
+
+- This is a real global key hook — it affects typing in *every* application
+  while it's running, not just a sandboxed demo.
+- Once you hit a pothole, EVERY keystroke (except Backspace) becomes a
+  random garbage character until you repair the tire — plan on your text
+  looking like static during that window.
+- The cursor-drop effect (`Down` x3) only does something meaningful in
+  multi-line text areas (editors, chat boxes, documents) — in single-line
+  fields like a URL bar it's a no-op, which is fine.
+- Consider this a "high highway hazard" prank tool for your own machine —
+  don't leave it running on anything you (or someone else) needs for real
+  work in the near term.
